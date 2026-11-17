@@ -1,8 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.db import Base, engine
 from app.routers.analytics import router as analytics_router
 from app.routers.factories import router as factories_router
+from app.routers.reports import router as reports_router
 from app.seed import seed_demo_data
 
 
@@ -22,9 +24,11 @@ def create_app() -> FastAPI:
 
     app.include_router(factories_router, prefix="/api")
     app.include_router(analytics_router, prefix="/api")
+    app.include_router(reports_router, prefix="/api")
 
     @app.on_event("startup")
     def startup_event():
+        Base.metadata.create_all(bind=engine)
         seed_demo_data()
 
     return app

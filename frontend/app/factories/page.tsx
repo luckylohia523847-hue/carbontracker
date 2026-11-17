@@ -1,24 +1,50 @@
-import './globals.css';
-import Link from 'next/link';
+"use client";
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+import { useEffect, useState } from 'react';
+import { fetchFactories } from '../../lib/api';
+
+export default function FactoriesPage() {
+  const [factories, setFactories] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetchFactories().then(setFactories).catch(() => {
+      setFactories([
+        { id: 1, name: 'Plant A', location: 'Pune, Maharashtra', industry: 'Textiles', company_id: 1 },
+        { id: 2, name: 'Plant B', location: 'Ahmednagar, Maharashtra', industry: 'FMCG', company_id: 1 },
+        { id: 3, name: 'Plant C', location: 'Nagpur, Maharashtra', industry: 'Engineering', company_id: 1 },
+      ]);
+    });
+  }, []);
+
   return (
-    <html lang="en">
-      <body>
-        <div className="min-h-screen bg-slate-100 text-slate-900">
-          <nav className="border-b border-slate-200 bg-white/90 backdrop-blur">
-            <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-              <Link href="/" className="text-xl font-bold text-carbon-800">CarbonTrack</Link>
-              <div className="flex gap-4 text-sm font-medium text-slate-600">
-                <Link href="/" className="hover:text-carbon-700">Dashboard</Link>
-                <Link href="/factories" className="hover:text-carbon-700">Factories</Link>
-                <Link href="/consumption" className="hover:text-carbon-700">Consumption</Link>
-              </div>
-            </div>
-          </nav>
-          {children}
+    <main className="mx-auto max-w-6xl p-8">
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <p className="text-sm uppercase tracking-[0.25em] text-carbon-700">Operations</p>
+          <h1 className="mt-2 text-3xl font-bold">Factory portfolio</h1>
         </div>
-      </body>
-    </html>
+        <button className="rounded-xl bg-carbon-700 px-4 py-2 font-medium text-white">+ Add factory</button>
+      </div>
+
+      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        {factories.map((factory) => (
+          <div key={factory.id} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <div className="mb-4 flex items-center justify-between">
+              <div>
+                <div className="text-sm text-slate-500">Factory</div>
+                <div className="text-xl font-semibold">{factory.name}</div>
+              </div>
+              <span className="rounded-full bg-emerald-100 px-2 py-1 text-xs font-medium text-emerald-700">Active</span>
+            </div>
+            <div className="space-y-2 text-sm text-slate-600">
+              <div><span className="font-medium text-slate-800">Location:</span> {factory.location}</div>
+              <div><span className="font-medium text-slate-800">Industry:</span> {factory.industry}</div>
+              <div><span className="font-medium text-slate-800">Emissions:</span> 132.4 tCO₂e</div>
+              <div><span className="font-medium text-slate-800">Status:</span> Below target</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </main>
   );
 }

@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.db import SessionLocal
-from app.models import Company, Factory, MeterReading, Recommendation, EmissionFactor
+from app.models import Factory, MeterReading, Recommendation
 from app.schemas import FactoryCreate, MeterReadingCreate
 from app.services.emissions import calculate_emissions
 
@@ -77,21 +77,6 @@ def create_reading(payload: MeterReadingCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(reading)
     return {"id": reading.id, "total_co2e_kg": reading.total_co2e_kg}
-
-
-@router.get("/emission-factors")
-def list_factors(db: Session = Depends(get_db)):
-    factors = db.query(EmissionFactor).all()
-    return [{
-        "id": item.id,
-        "source_name": item.source_name,
-        "factor_name": item.factor_name,
-        "units": item.units,
-        "value": item.value,
-        "scope": item.scope,
-        "year": item.year,
-        "source_url": item.source_url,
-    } for item in factors]
 
 
 @router.get("/recommendations")

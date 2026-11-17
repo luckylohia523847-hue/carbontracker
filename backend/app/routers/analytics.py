@@ -20,6 +20,7 @@ def dashboard_overview():
             {"month": "Apr", "emissions": 24.5, "target": 22.8},
             {"month": "May", "emissions": 23.4, "target": 22.0},
             {"month": "Jun", "emissions": 22.8, "target": 21.8},
+            {"month": "Jul", "emissions": 21.3, "target": 21.1},
         ],
         "process_breakdown": [
             {"name": "Boiler", "value": 32},
@@ -29,8 +30,13 @@ def dashboard_overview():
             {"name": "Lighting", "value": 9},
         ],
         "recommendations": [
-            {"title": "LED lighting retrofit", "impact": "12.5 tCO2e", "savings": "₹ 3.2L"},
-            {"title": "Rooftop solar feasibility", "impact": "18.1 tCO2e", "savings": "₹ 5.6L"},
-            {"title": "Route optimization", "impact": "6.9 tCO2e", "savings": "₹ 2.1L"},
+            {"title": "LED lighting retrofit", "impact": "12.5 tCO₂e", "savings": "₹ 3.2L"},
+            {"title": "Rooftop solar feasibility", "impact": "18.1 tCO₂e", "savings": "₹ 5.6L"},
+            {"title": "Route optimization", "impact": "6.9 tCO₂e", "savings": "₹ 2.1L"},
+        ],
+        "factories": [
+            {"name": "Plant A", "location": "Pune", "emissions": "132.4 tCO₂e", "status": "Below target"},
+            {"name": "Plant B", "location": "Ahmednagar", "emissions": "116.1 tCO₂e", "status": "Improving"},
+            {"name": "Plant C", "location": "Nagpur", "emissions": "151.7 tCO₂e", "status": "Watchlist"},
         ],
     }
