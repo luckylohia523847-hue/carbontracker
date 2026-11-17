@@ -1,25 +1,33 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import analytics, factories
+
+from app.routers.analytics import router as analytics_router
+from app.routers.factories import router as factories_router
 from app.seed import seed_demo_data
 
-app = FastAPI(title="CarbonTrack API", version="0.1.0")
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+def create_app() -> FastAPI:
+    app = FastAPI(title="CarbonTrack API", version="0.1.0")
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
-@app.get("/health")
-def health():
-    return {"status": "ok", "service": "carbontrack-api"}
+    @app.get("/health")
+    def health():
+        return {"status": "ok", "service": "carbontrack-api"}
 
-app.include_router(factories.router, prefix="/api")
-app.include_router(analytics.router, prefix="/api")
+    app.include_router(factories_router, prefix="/api")
+    app.include_router(analytics_router, prefix="/api")
 
-@app.on_event("startup")
-def startup_event():
-    seed_demo_data()
+    @app.on_event("startup")
+    def startup_event():
+        seed_demo_data()
+
+    return app
+
+
+app = create_app()

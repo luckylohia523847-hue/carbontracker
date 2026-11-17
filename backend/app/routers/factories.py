@@ -1,5 +1,6 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
+
 from app.db import SessionLocal
 from app.models import Company, Factory, MeterReading, Recommendation, EmissionFactor
 from app.schemas import FactoryCreate, MeterReadingCreate
@@ -26,6 +27,20 @@ def list_factories(db: Session = Depends(get_db)):
         "industry": item.industry,
         "company_id": item.company_id,
     } for item in factories]
+
+
+@router.get("/factories/{factory_id}")
+def get_factory(factory_id: int, db: Session = Depends(get_db)):
+    factory = db.query(Factory).filter(Factory.id == factory_id).first()
+    if not factory:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Factory not found")
+    return {
+        "id": factory.id,
+        "name": factory.name,
+        "location": factory.location,
+        "industry": factory.industry,
+        "company_id": factory.company_id,
+    }
 
 
 @router.post("/factories")
